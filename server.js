@@ -7,14 +7,7 @@ const bodyParser = require("body-parser");
 const userRouter = require("./router/userRouter.js");
 const cors = require("cors");
 
-const corsOptions = {
-  origin: `${process.env.FRONTEND_URL}`,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  optionsSuccessStatus: 204,
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/user", userRouter);
