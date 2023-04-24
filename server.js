@@ -2,12 +2,12 @@ require("dotenv").config();
 require("./database/client");
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8000;
 const bodyParser = require("body-parser");
 const userRouter = require("./router/userRouter.js");
 const cors = require("cors");
 
-app.use(cors());
+app.use(cors("*"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/user", userRouter);

@@ -59,6 +59,18 @@ router.post(
       members,
       bandUrl,
     } = req.body;
+    User.findOne({ username }).then((user) => {
+      if (user) {
+        return res.status(404).json({ message: "username already exists" });
+      }
+    });
+    User.findOne({ email }).then((user) => {
+      if (email) {
+        return res
+          .status(404)
+          .json({ message: "email already associated with an account" });
+      }
+    });
     if (req.files.profile && req.files.banner) {
       const profilePicture = req.files.profile[0].path;
       const bannerPicture = req.files.banner[0].path;

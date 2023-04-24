@@ -57,7 +57,6 @@ const newUserSchema = new mongoose.Schema(
     bio: {
       type: String,
       default: "",
-      unique: true,
     },
     genre: {
       type: String,
@@ -93,6 +92,9 @@ const newUserSchema = new mongoose.Schema(
             type: String,
           },
           artistName: {
+            type: String,
+          },
+          artistId: {
             type: String,
           },
           date: {
