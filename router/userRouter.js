@@ -226,55 +226,162 @@ router.put(
       bandUrl,
       email,
     } = req.body;
-    const getProfilePicture = () => {
-      if (req.files.profile) {
-        return req.files.profile[0].path;
-      }
-    };
-    const profilePicture = getProfilePicture();
-    const getBannerPicture = () => {
-      if (req.files.banner) {
-        return req.files.banner[0].path;
-      }
-    };
-    const bannerPicture = getBannerPicture();
-    bcrypt.hash(password, 10).then((hashedPassword) => {
-      User.findByIdAndUpdate(
-        id,
-        {
-          name,
-          username,
-          email,
-          password: hashedPassword,
-          age,
-          favouriteGenre,
-          favouriteArtists,
-          favouriteSongs,
-          planedEvents,
-          city,
-          country,
-          genre,
-          bio,
-          members,
-          bandUrl,
-          profilePicture,
-          bannerPicture,
-        },
-        { new: true }
-      )
-        .then((data) => {
-          if (!data) {
-            // Send 404 if no artist is found with the specified _id
-            return res.sendStatus(404);
-          }
-          res.json(data);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          res.sendStatus(500);
-        })
-        .catch((e) => console.log(e.message));
-    });
+
+    if (req.files.profile && req.files.banner) {
+      const profilePicture = req.files.profile[0].path;
+      const bannerPicture = req.files.banner[0].path;
+      bcrypt.hash(password, 10).then((hashedPassword) => {
+        User.findByIdAndUpdate(
+          id,
+          {
+            name,
+            username,
+            email,
+            password: hashedPassword,
+            age,
+            favouriteGenre,
+            favouriteArtists,
+            favouriteSongs,
+            planedEvents,
+            city,
+            country,
+            genre,
+            bio,
+            members,
+            bandUrl,
+            profilePicture,
+            bannerPicture,
+          },
+          { new: true }
+        )
+          .then((data) => {
+            if (!data) {
+              // Send 404 if no artist is found with the specified _id
+              return res.sendStatus(404);
+            }
+            res.json(data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+            res.sendStatus(500);
+          })
+          .catch((e) => console.log(e.message));
+      });
+    } else if (req.files.profile) {
+      const profilePicture = req.files.profile[0].path;
+
+      bcrypt.hash(password, 10).then((hashedPassword) => {
+        User.findByIdAndUpdate(
+          id,
+          {
+            name,
+            username,
+            email,
+            password: hashedPassword,
+            age,
+            favouriteGenre,
+            favouriteArtists,
+            favouriteSongs,
+            planedEvents,
+            city,
+            country,
+            genre,
+            bio,
+            members,
+            bandUrl,
+            profilePicture,
+          },
+          { new: true }
+        )
+          .then((data) => {
+            if (!data) {
+              // Send 404 if no artist is found with the specified _id
+              return res.sendStatus(404);
+            }
+            res.json(data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+            res.sendStatus(500);
+          })
+          .catch((e) => console.log(e.message));
+      });
+    } else if (req.files.banner) {
+      const bannerPicture = req.files.banner[0].path;
+
+      bcrypt.hash(password, 10).then((hashedPassword) => {
+        User.findByIdAndUpdate(
+          id,
+          {
+            name,
+            username,
+            email,
+            password: hashedPassword,
+            age,
+            favouriteGenre,
+            favouriteArtists,
+            favouriteSongs,
+            planedEvents,
+            city,
+            country,
+            genre,
+            bio,
+            members,
+            bandUrl,
+            bannerPicture,
+          },
+          { new: true }
+        )
+          .then((data) => {
+            if (!data) {
+              // Send 404 if no artist is found with the specified _id
+              return res.sendStatus(404);
+            }
+            res.json(data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+            res.sendStatus(500);
+          })
+          .catch((e) => console.log(e.message));
+      });
+    } else {
+      bcrypt.hash(password, 10).then((hashedPassword) => {
+        User.findByIdAndUpdate(
+          id,
+          {
+            name,
+            username,
+            email,
+            password: hashedPassword,
+            age,
+            favouriteGenre,
+            favouriteArtists,
+            favouriteSongs,
+            planedEvents,
+            city,
+            country,
+            genre,
+            bio,
+            members,
+            bandUrl,
+          },
+          { new: true }
+        )
+          .then((data) => {
+            if (!data) {
+              // Send 404 if no artist is found with the specified _id
+              return res.sendStatus(404);
+            }
+            res.json(data);
+          })
+          .catch((err) => {
+            console.log(err.message);
+            res.sendStatus(500);
+          })
+          .catch((e) => console.log(e.message));
+      });
+    }
   }
 );
 
@@ -320,10 +427,11 @@ router.put("/:id/upcomingEvent", (req, res) => {
 
 router.put("/:id/song", (req, res) => {
   const { id } = req.params;
-  const { name, duration, url, releaseDate, album } = req.body;
+  const { name, minutes, seconds, url, releaseDate, album } = req.body;
   const song = {
     name: name,
-    duration: duration,
+    minutes: minutes,
+    seconds: seconds,
     url: url,
     releaseDate: releaseDate,
     album: album,

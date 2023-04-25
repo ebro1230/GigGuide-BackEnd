@@ -69,7 +69,10 @@ const newUserSchema = new mongoose.Schema(
             type: String,
             required: true,
           },
-          duration: {
+          minutes: {
+            type: String,
+          },
+          seconds: {
             type: String,
           },
           url: {
