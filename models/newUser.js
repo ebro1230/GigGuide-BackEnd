@@ -91,34 +91,46 @@ const newUserSchema = new mongoose.Schema(
     upcomingEvents: {
       type: [
         {
-          eventName: {
+          artistId: {
+            type: String,
+          },
+          profilePicture: {
             type: String,
           },
           artistName: {
             type: String,
           },
-          artistId: {
+          eventName: {
             type: String,
           },
           date: {
-            type: Date,
-            required: true,
+            type: String,
           },
           startTime: {
-            type: Date,
-          },
-          venue: {
-            type: String,
-            required: true,
-          },
-          address: {
-            type: String,
-            required: true,
-          },
-          ticketUrl: {
             type: String,
           },
           info: {
+            type: String,
+          },
+          street: {
+            type: String,
+          },
+          city: {
+            type: String,
+          },
+          state: {
+            type: String,
+          },
+          country: {
+            type: String,
+          },
+          postalCode: {
+            type: String,
+          },
+          address: {
+            type: String,
+          },
+          artistType: {
             type: String,
           },
         },
