@@ -9,6 +9,9 @@ const artists = require("./router/getLocalArtistsRouter.js");
 const requestEndpoint =
   "http://ip-api.com/json/?fields=status,message,country,countryCode,city";
 const cors = require("cors");
+const corsOptions = {
+  origin: "http://ip-api.com",
+};
 
 app.use(cors("*"));
 app.use(function (req, res, next) {
@@ -30,7 +33,7 @@ app.use("/banner-pics", express.static("./banner-pics"));
 
 app.use("/api/artists", artists);
 
-app.get("/getIP", async (req, res) => {
+app.get("/getIP", cors(corsOptions), async (req, res) => {
   const fetchOptions = {
     method: "GET",
   };
