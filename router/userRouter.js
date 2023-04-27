@@ -61,11 +61,13 @@ router.post(
     } = req.body;
     User.findOne({ username }).then((user) => {
       if (user) {
+        console.log(user);
         return res.status(404).json({ message: "username already exists" });
       }
     });
-    User.findOne({ email }).then((user) => {
+    User.findOne({ email }).then((email) => {
       if (email) {
+        console.log(email);
         return res
           .status(404)
           .json({ message: "email already associated with an account" });
@@ -96,7 +98,7 @@ router.post(
             profilePicture,
             bannerPicture,
           })
-            .then((data) => res.json(data))
+            .then((data) => res.status(200).json(data))
             .catch((e) => console.log(e.message));
         })
         .catch((e) => console.log(e.message));
@@ -123,7 +125,7 @@ router.post(
             bandUrl,
             profilePicture,
           })
-            .then((data) => res.json(data))
+            .then((data) => res.status(200).json(data))
             .catch((e) => console.log(e.message));
         })
         .catch((e) => console.log(e.message));
@@ -150,7 +152,7 @@ router.post(
             bandUrl,
             bannerPicture,
           })
-            .then((data) => res.json(data))
+            .then((data) => res.status(200).json(data))
             .catch((e) => console.log(e.message));
         })
         .catch((e) => console.log(e.message));
@@ -175,7 +177,7 @@ router.post(
             members,
             bandUrl,
           })
-            .then((data) => res.json(data))
+            .then((data) => res.status(200).json(data))
             .catch((e) => console.log(e.message));
         })
         .catch((e) => console.log(e.message));
