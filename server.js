@@ -5,6 +5,9 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 const bodyParser = require("body-parser");
 const userRouter = require("./router/userRouter.js");
+const artists = require("./router/getLocalArtistsRouter.js");
+const requestEndpoint =
+  "http://ip-api.com/json/?fields=status,message,country,countryCode,city";
 const cors = require("cors");
 
 app.use(cors("*"));
@@ -21,13 +24,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/api/user", userRouter);
 
-const artists = require("./router/getLocalArtistsRouter.js");
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/profile-pics", express.static("./profile-pics"));
 app.use("/banner-pics", express.static("./banner-pics"));
 
 app.use("/api/artists", artists);
+
+app.get("/getIP", async (req, res) => {
+  const fetchOptions = {
+    method: "GET",
+  };
+  const response = await fetch(requestEndpoint, fetchOptions);
+  const jsonResponse = await response.json();
+  res.json(jsonResponse);
+});
 
 app.listen(PORT, () => {
   console.log(`Hello.  Listening on port ${PORT}`);
