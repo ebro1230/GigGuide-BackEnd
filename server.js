@@ -10,7 +10,7 @@ const requestEndpoint =
   "http://ip-api.com/json/?fields=status,message,country,countryCode,city";
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://ip-api.com",
+  origin: process.env.FRONTEND_URL,
 };
 
 app.use(cors("*"));
@@ -38,8 +38,14 @@ app.get("/getIP", cors(corsOptions), async (req, res) => {
     method: "GET",
   };
   const response = await fetch(requestEndpoint, fetchOptions);
-  const jsonResponse = await response.json();
-  res.json(jsonResponse);
+  if (response) {
+    console.log("Success");
+    console.log(response);
+    const jsonResponse = await response.json();
+    res.json(jsonResponse);
+  } else {
+    console.log(response);
+  }
 });
 
 app.listen(PORT, () => {
