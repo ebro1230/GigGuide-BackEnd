@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 8000;
 const bodyParser = require("body-parser");
 const userRouter = require("./router/userRouter.js");
 const artists = require("./router/getLocalArtistsRouter.js");
-const requestEndpoint = `https://api.ipgeolocation.io/ipgeo?apiKey=${process.env.REACT_APP_IP_API_KEY}`;
+const requestEndpoint = `https://cors-anywhere.herokuapp.com/http://ip-api.com/json/?fields=status,message,country,countryCode,city`;
 const cors = require("cors");
 const corsOptions = {
   origin: "http://localhost:8000/getIP",
