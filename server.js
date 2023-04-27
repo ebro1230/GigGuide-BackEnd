@@ -6,11 +6,10 @@ const PORT = process.env.PORT || 8000;
 const bodyParser = require("body-parser");
 const userRouter = require("./router/userRouter.js");
 const artists = require("./router/getLocalArtistsRouter.js");
-const requestEndpoint =
-  "http://ip-api.com/json/?fields=status,message,country,countryCode,city";
+const requestEndpoint = `https://api.ipgeolocation.io/ipgeo?apiKey=${process.env.REACT_APP_IP_API_KEY}`;
 const cors = require("cors");
 const corsOptions = {
-  origin: process.env.FRONTEND_URL,
+  origin: "http://localhost:8000/getIP",
 };
 
 app.use(cors("*"));
@@ -33,7 +32,7 @@ app.use("/banner-pics", express.static("./banner-pics"));
 
 app.use("/api/artists", artists);
 
-app.get("/getIP", cors(corsOptions), async (req, res) => {
+app.get("/getIP", cors(), async (req, res) => {
   const fetchOptions = {
     method: "GET",
   };
