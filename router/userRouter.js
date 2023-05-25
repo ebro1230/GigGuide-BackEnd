@@ -12,7 +12,6 @@ const { s3 } = require("../s3.js");
 const { PutObjectCommand } = require("../s3.js");
 const { GetObjectCommand } = require("../s3.js");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-const multerS3 = require("multer-s3-v3");
 
 const generateToken = (data) => {
   return jwt.sign(data, secret, { expiresIn: "1800s" }); //token expires in 30 minutes
