@@ -763,7 +763,7 @@ router.get("/:id", (req, res) => {
           Bucket: process.env.AWS_BUCKET_NAME_BANNER,
           Key: user.bannerPicture,
         };
-        const commandBanner = new GetObjectCommand(getObjectParamsProfile);
+        const commandBanner = new GetObjectCommand(getObjectParamsBanner);
         const urlBanner = await getSignedUrl(s3, commandBanner, {
           expiresIn: 3600,
         });
@@ -796,7 +796,7 @@ router.get("/:username", (req, res) => {
           Bucket: process.env.AWS_BUCKET_NAME_BANNER,
           Key: user.bannerPicture,
         };
-        const commandBanner = new GetObjectCommand(getObjectParamsProfile);
+        const commandBanner = new GetObjectCommand(getObjectParamsBanner);
         const urlBanner = await getSignedUrl(s3, commandBanner, {
           expiresIn: 3600,
         });
