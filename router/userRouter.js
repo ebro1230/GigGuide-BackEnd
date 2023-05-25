@@ -8,25 +8,31 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { verifyToken } = require("../middlewares/auth");
 const secret = process.env.MY_SECRET;
+const { s3 } = require("../s3.js");
+const { PutObjectCommand } = require("../s3.js");
+const { GetObjectCommand } = require("../s3.js");
+const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
+const multerS3 = require("multer-s3-v3");
 
 const generateToken = (data) => {
   return jwt.sign(data, secret, { expiresIn: "1800s" }); //token expires in 30 minutes
 };
 
 //setting multer for profile pics
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    if (file.fieldname === "profile") {
-      cb(null, "./profile-pics");
-    }
-    if (file.fieldname === "banner") {
-      cb(null, "./banner-pics");
-    }
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
+// multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     if (file.fieldname === "profile") {
+//       cb(null, "./profile-pics");
+//     }
+//     if (file.fieldname === "banner") {
+//       cb(null, "./banner-pics");
+//     }
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, file.originalname);
+//   },
+// });
 
 const upload = multer({
   storage: storage,
@@ -41,7 +47,7 @@ router.post(
     { name: "profile", maxCount: 1 },
     { name: "banner", maxCount: 1 },
   ]),
-  (req, res) => {
+  async (req, res) => {
     const {
       name,
       username,
@@ -74,8 +80,24 @@ router.post(
       }
     });
     if (req.files.profile && req.files.banner) {
-      const profilePicture = req.files.profile[0].path;
-      const bannerPicture = req.files.banner[0].path;
+      const profilePicture = Date.now() + req.files.profile[0].originalname;
+      const paramsProfile = {
+        Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+        Key: req.files.profile[0].originalname,
+        Body: req.files.profile[0].buffer,
+        ContentType: req.files.profile[0].mimetype,
+      };
+      const commandProfile = new PutObjectCommand(paramsProfile);
+      await s3.send(commandProfile);
+      const bannerPicture = Date.now() + req.files.banner[0].originalname;
+      const paramsBanner = {
+        Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+        Key: req.files.banner[0].originalname,
+        Body: req.files.banner[0].buffer,
+        ContentType: req.files.banner[0].mimetype,
+      };
+      const commandBanner = new PutObjectCommand(paramsBanner);
+      await s3.send(commandBanner);
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
@@ -103,7 +125,15 @@ router.post(
         })
         .catch((e) => console.log(e.message));
     } else if (req.files.profile) {
-      const profilePicture = req.files.profile[0].path;
+      const profilePicture = Date.now() + req.files.profile[0].originalname;
+      const paramsProfile = {
+        Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+        Key: req.files.profile[0].originalname,
+        Body: req.files.profile[0].buffer,
+        ContentType: req.files.profile[0].mimetype,
+      };
+      const commandProfile = new PutObjectCommand(paramsProfile);
+      await s3.send(commandProfile);
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
@@ -130,7 +160,15 @@ router.post(
         })
         .catch((e) => console.log(e.message));
     } else if (req.files.banner) {
-      const bannerPicture = req.files.banner[0].path;
+      const bannerPicture = Date.now() + req.files.banner[0].originalname;
+      const paramsBanner = {
+        Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+        Key: req.files.banner[0].originalname,
+        Body: req.files.banner[0].buffer,
+        ContentType: req.files.banner[0].mimetype,
+      };
+      const commandBanner = new PutObjectCommand(paramsBanner);
+      await s3.send(commandBanner);
       bcrypt
         .hash(password, 10)
         .then((hashedPassword) => {
@@ -209,7 +247,7 @@ router.put(
     { name: "profile", maxCount: 1 },
     { name: "banner", maxCount: 1 },
   ]),
-  (req, res) => {
+  async (req, res) => {
     const { id } = req.params;
     const {
       name,
@@ -230,8 +268,24 @@ router.put(
     } = req.body;
 
     if (req.files.profile && req.files.banner) {
-      const profilePicture = req.files.profile[0].path;
-      const bannerPicture = req.files.banner[0].path;
+      const profilePicture = Date.now() + req.files.profile[0].originalname;
+      const paramsProfile = {
+        Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+        Key: req.files.profile[0].originalname,
+        Body: req.files.profile[0].buffer,
+        ContentType: req.files.profile[0].mimetype,
+      };
+      const commandProfile = new PutObjectCommand(paramsProfile);
+      await s3.send(commandProfile);
+      const bannerPicture = Date.now() + req.files.banner[0].originalname;
+      const paramsBanner = {
+        Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+        Key: req.files.banner[0].originalname,
+        Body: req.files.banner[0].buffer,
+        ContentType: req.files.banner[0].mimetype,
+      };
+      const commandBanner = new PutObjectCommand(paramsBanner);
+      await s3.send(commandBanner);
       //bcrypt.hash(password, 10).then((hashedPassword) => {
       User.findByIdAndUpdate(
         id,
@@ -270,8 +324,16 @@ router.put(
         .catch((e) => console.log(e.message));
       //});
     } else if (req.files.profile) {
-      const profilePicture = req.files.profile[0].path;
-
+      console.log(req.files.profile[0]);
+      const profilePicture = Date.now() + req.files.profile[0].originalname;
+      const params = {
+        Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+        Key: profilePicture,
+        Body: req.files.profile[0].buffer,
+        ContentType: req.files.profile[0].mimetype,
+      };
+      const command = new PutObjectCommand(params);
+      await s3.send(command);
       //bcrypt.hash(password, 10).then((hashedPassword) => {
       User.findByIdAndUpdate(
         id,
@@ -309,7 +371,15 @@ router.put(
         .catch((e) => console.log(e.message));
       // });
     } else if (req.files.banner) {
-      const bannerPicture = req.files.banner[0].path;
+      const bannerPicture = Date.now() + req.files.banner[0].originalname;
+      const paramsBanner = {
+        Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+        Key: req.files.banner[0].originalname,
+        Body: req.files.banner[0].buffer,
+        ContentType: req.files.banner[0].mimetype,
+      };
+      const commandBanner = new PutObjectCommand(paramsBanner);
+      await s3.send(commandBanner);
 
       //bcrypt.hash(password, 10).then((hashedPassword) => {
       User.findByIdAndUpdate(
@@ -677,10 +747,28 @@ router.delete("/:id/upcomingEvent/:eventid", (req, res) => {
 router.get("/:id", (req, res) => {
   const id = req.params.id;
   User.findById(id)
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         return res.status(404).send("User not found!");
       } else {
+        const getObjectParamsProfile = {
+          Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+          Key: user.profilePicture,
+        };
+        const commandProfile = new GetObjectCommand(getObjectParamsProfile);
+        const urlProfile = await getSignedUrl(s3, commandProfile, {
+          expiresIn: 3600,
+        });
+        user.profilePicture = urlProfile;
+        const getObjectParamsBanner = {
+          Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+          Key: user.bannerPicture,
+        };
+        const commandBanner = new GetObjectCommand(getObjectParamsProfile);
+        const urlBanner = await getSignedUrl(s3, commandBanner, {
+          expiresIn: 3600,
+        });
+        user.bannerPicture = urlBanner;
         return res.json(user);
       }
     })
@@ -692,10 +780,28 @@ router.get("/:id", (req, res) => {
 router.get("/:username", (req, res) => {
   const username = req.params.username;
   User.findById(username)
-    .then((user) => {
+    .then(async (user) => {
       if (!user) {
         return res.status(404).send("User not found!");
       } else {
+        const getObjectParamsProfile = {
+          Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+          Key: user.profilePicture,
+        };
+        const commandProfile = new GetObjectCommand(getObjectParamsProfile);
+        const urlProfile = await getSignedUrl(s3, commandProfile, {
+          expiresIn: 3600,
+        });
+        user.profilePicture = urlProfile;
+        const getObjectParamsBanner = {
+          Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+          Key: user.bannerPicture,
+        };
+        const commandBanner = new GetObjectCommand(getObjectParamsProfile);
+        const urlBanner = await getSignedUrl(s3, commandBanner, {
+          expiresIn: 3600,
+        });
+        user.bannerPicture = urlBanner;
         return res.json(user);
       }
     })
