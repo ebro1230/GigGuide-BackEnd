@@ -82,7 +82,7 @@ router.post(
       const profilePicture = Date.now() + req.files.profile[0].originalname;
       const paramsProfile = {
         Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-        Key: req.files.profile[0].originalname,
+        Key: profilePicture,
         Body: req.files.profile[0].buffer,
         ContentType: req.files.profile[0].mimetype,
       };
@@ -91,7 +91,7 @@ router.post(
       const bannerPicture = Date.now() + req.files.banner[0].originalname;
       const paramsBanner = {
         Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-        Key: req.files.banner[0].originalname,
+        Key: bannerPicture,
         Body: req.files.banner[0].buffer,
         ContentType: req.files.banner[0].mimetype,
       };
@@ -127,7 +127,7 @@ router.post(
       const profilePicture = Date.now() + req.files.profile[0].originalname;
       const paramsProfile = {
         Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-        Key: req.files.profile[0].originalname,
+        Key: profilePicture,
         Body: req.files.profile[0].buffer,
         ContentType: req.files.profile[0].mimetype,
       };
@@ -162,7 +162,7 @@ router.post(
       const bannerPicture = Date.now() + req.files.banner[0].originalname;
       const paramsBanner = {
         Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-        Key: req.files.banner[0].originalname,
+        Key: bannerPicture,
         Body: req.files.banner[0].buffer,
         ContentType: req.files.banner[0].mimetype,
       };
@@ -270,16 +270,17 @@ router.put(
       const profilePicture = Date.now() + req.files.profile[0].originalname;
       const paramsProfile = {
         Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-        Key: req.files.profile[0].originalname,
+        Key: profilePicture,
         Body: req.files.profile[0].buffer,
         ContentType: req.files.profile[0].mimetype,
       };
       const commandProfile = new PutObjectCommand(paramsProfile);
       await s3.send(commandProfile);
+
       const bannerPicture = Date.now() + req.files.banner[0].originalname;
       const paramsBanner = {
         Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-        Key: req.files.banner[0].originalname,
+        Key: bannerPicture,
         Body: req.files.banner[0].buffer,
         ContentType: req.files.banner[0].mimetype,
       };
@@ -323,7 +324,6 @@ router.put(
         .catch((e) => console.log(e.message));
       //});
     } else if (req.files.profile) {
-      console.log(req.files.profile[0]);
       const profilePicture = Date.now() + req.files.profile[0].originalname;
       const params = {
         Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
@@ -373,7 +373,7 @@ router.put(
       const bannerPicture = Date.now() + req.files.banner[0].originalname;
       const paramsBanner = {
         Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-        Key: req.files.banner[0].originalname,
+        Key: bannerPicture,
         Body: req.files.banner[0].buffer,
         ContentType: req.files.banner[0].mimetype,
       };
