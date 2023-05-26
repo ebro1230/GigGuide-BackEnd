@@ -15,22 +15,26 @@ router.get("/", (req, res) => {
         return res.sendStatus(404);
       }
       for (let i = 0; i < data.length; i++) {
-        const getObjectParams = {
-          Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-          Key: data[i].profilePicture,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        data[i].profilePicture = url;
+        if (data[i].profilePicture) {
+          const getObjectParams = {
+            Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+            Key: data[i].profilePicture,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+          const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+          data[i].profilePicture = url;
+        }
       }
       for (let i = 0; i < data.length; i++) {
-        const getObjectParams = {
-          Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-          Key: data[i].bannerPicture,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        data[i].bannerPicture = url;
+        if (data[i].bannerPicture) {
+          const getObjectParams = {
+            Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+            Key: data[i].bannerPicture,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+          const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+          data[i].bannerPicture = url;
+        }
       }
       res.json(data);
     })
@@ -49,24 +53,29 @@ router.get("/:id", (req, res) => {
         // Send 404 if no artist is found with the specified _id
         return res.sendStatus(404);
       }
-      const getObjectParamsProfile = {
-        Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-        Key: data.profilePicture,
-      };
-      const commandProfile = new GetObjectCommand(getObjectParamsProfile);
-      const urlProfile = await getSignedUrl(s3, commandProfile, {
-        expiresIn: 3600,
-      });
-      data.profilePicture = urlProfile;
-      const getObjectParamsBanner = {
-        Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-        Key: data.bannerPicture,
-      };
-      const commandBanner = new GetObjectCommand(getObjectParamsBanner);
-      const urlBanner = await getSignedUrl(s3, commandBanner, {
-        expiresIn: 3600,
-      });
-      data.bannerPicture = urlBanner;
+      if (data.profilePicture) {
+        const getObjectParamsProfile = {
+          Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+          Key: data.profilePicture,
+        };
+        const commandProfile = new GetObjectCommand(getObjectParamsProfile);
+        const urlProfile = await getSignedUrl(s3, commandProfile, {
+          expiresIn: 3600,
+        });
+        data.profilePicture = urlProfile;
+      }
+
+      if (data.bannerPicture) {
+        const getObjectParamsBanner = {
+          Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+          Key: data.bannerPicture,
+        };
+        const commandBanner = new GetObjectCommand(getObjectParamsBanner);
+        const urlBanner = await getSignedUrl(s3, commandBanner, {
+          expiresIn: 3600,
+        });
+        data.bannerPicture = urlBanner;
+      }
       res.json(data);
     })
     .catch((err) => {
@@ -102,22 +111,26 @@ router.get("/:name/:country/:city/:genre", (req, res) => {
         return res.sendStatus(404);
       }
       for (let i = 0; i < data.length; i++) {
-        const getObjectParams = {
-          Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
-          Key: data[i].profilePicture,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        data[i].profilePicture = url;
+        if (data[i].profilePicture) {
+          const getObjectParams = {
+            Bucket: process.env.AWS_BUCKET_NAME_PROFILE,
+            Key: data[i].profilePicture,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+          const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+          data[i].profilePicture = url;
+        }
       }
       for (let i = 0; i < data.length; i++) {
-        const getObjectParams = {
-          Bucket: process.env.AWS_BUCKET_NAME_BANNER,
-          Key: data[i].bannerPicture,
-        };
-        const command = new GetObjectCommand(getObjectParams);
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
-        data[i].bannerPicture = url;
+        if (data[i].bannerPicture) {
+          const getObjectParams = {
+            Bucket: process.env.AWS_BUCKET_NAME_BANNER,
+            Key: data[i].bannerPicture,
+          };
+          const command = new GetObjectCommand(getObjectParams);
+          const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+          data[i].bannerPicture = url;
+        }
       }
       res.json(data);
     })
